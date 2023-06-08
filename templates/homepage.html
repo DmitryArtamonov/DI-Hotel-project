@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+
+    <div class="container">
+
+
+        {% for category in categories %}
+
+
+           <div class="card" style="width: 20rem;">
+               <img class="card-img-top" src="{{ category.picture }}" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">{{ category }} </p>
+                </div>
+           </div>
+
+
+        {% endfor %}
+
+    </div>
+
+{% endblock content %}
