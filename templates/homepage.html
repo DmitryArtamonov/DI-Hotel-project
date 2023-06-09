@@ -11,9 +11,9 @@
 
 
            <div class="card" style="width: 20rem;">
-               <img class="card-img-top" src="{{ category.picture }}" alt="Card image cap">
+               <img class="card-img-top" src="{{ category.picture.url }}" alt="Card image cap">
                 <div class="card-body">
-                    <p class="card-text">{{ category }} </p>
+                    <p class="card-text">{{ category }} {{ category.picture.url }}</p>
                 </div>
            </div>
 
