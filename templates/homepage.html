@@ -2,24 +2,32 @@
 
 {% block content %}
 
-
-
-    <div class="container">
-
+<div class="container">
+    <div class="row">
 
         {% for category in categories %}
 
-
-           <div class="card" style="width: 20rem;">
-               <img class="card-img-top" src="{{ category.picture.url }}" alt="Card image cap">
+        <div class="col-md-4 mb-4">
+            <div class="card border-light" style="width: 18rem;">
+                <img src="{{ category.picture.url }}" class="card-img-top" alt="...">
                 <div class="card-body">
-                    <p class="card-text">{{ category }} {{ category.picture.url }}</p>
+                    <h5 class="card-title">{{ category }}</h5>
+                    <p class="card-text">
+                        {% with ''|center:category.persons as range %}
+                            {% for _ in range %}
+                                👤
+                            {% endfor %}
+                        {% endwith %}
+                    </p>
+                    <h6 class="card-subtitle mb-2 text-muted">${{ category.price }} per night</h6>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
                 </div>
-           </div>
-
+            </div>
+        </div>
 
         {% endfor %}
 
     </div>
+</div>
 
 {% endblock content %}
