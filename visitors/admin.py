@@ -6,4 +6,5 @@ admin.site.register(User)
 admin.site.register(RoomCategory)
 admin.site.register(Room)
 admin.site.register(Visitor)
+admin.site.register(Booking)
 

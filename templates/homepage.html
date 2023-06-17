@@ -2,32 +2,50 @@
 
 {% block content %}
 
-<div class="container">
-    <div class="row">
+    <img src="media/main-image.jpg" class="img-fluid img-rounded w-100" alt="...">
 
-        {% for category in categories %}
+    <div class="container mt-5 mb-5" >
 
-        <div class="col-md-4 mb-4">
-            <div class="card border-light" style="width: 18rem;">
-                <img src="{{ category.picture.url }}" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">{{ category }}</h5>
-                    <p class="card-text">
-                        {% with ''|center:category.persons as range %}
-                            {% for _ in range %}
-                                👤
-                            {% endfor %}
-                        {% endwith %}
-                    </p>
-                    <h6 class="card-subtitle mb-2 text-muted">${{ category.price }} per night</h6>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
-                </div>
-            </div>
-        </div>
+        <h1>
+            Welcome to our Hotel!
+        </h1>
 
-        {% endfor %}
+        <h3>
+
+            Experience luxury and tranquility in a picturesque location. Our hotel offers elegant rooms, exceptional service, and world-class amenities. Discover local attractions, then return to unwind in our serene oasis. Book your stay today and indulge in a remarkable experience.
+
+        </h3>
 
     </div>
-</div>
+
+
+
+    <div class="container">
+        <div class="row justify-content-between">
+
+            {% for category in categories %}
+
+            <div class="col-md-4 mb-4 text-center">
+                <div class="card">
+                    <img src="{{ category.picture.url }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ category }}</h5>
+                        <p class="card-text">
+                            {% with ''|center:category.persons as range %}
+                                {% for _ in range %}
+                                    <i class="bi bi-person-fill text-secondary"></i>
+                                {% endfor %}
+                            {% endwith %}
+                        </p>
+                        <h6 class="card-subtitle mb-2 text-muted">${{ category.price }} per night</h6>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+
+        </div>
+    </div>
 
 {% endblock content %}

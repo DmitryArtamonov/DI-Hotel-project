@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -30,6 +31,19 @@ class Visitor(models.Model):
 
     def __str__(self):
         return self.user.first_name+' '+self.user.last_name
+
+
+class Booking(models.Model):
+    date_of_booking = models.DateTimeField(default=timezone.now)
+    visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE)
+    check_in = models.DateField()
+    check_out = models.DateField()
+    cost = models.IntegerField()
+    rooms = models.ManyToManyField(Room)
+
+    def __str__(self):
+        return self.id
+
 
 
 

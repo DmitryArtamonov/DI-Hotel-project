@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container d-flex justify-content-center">
+
+        <form class="mx-auto" method="post">
+            {% csrf_token %}
+            {{ form }}
+            <button type="submit" name="find_button">Find</button>
+        </form>
+
+    </div>
+
+    {% if available %}
+
+        <div class="container mt-5 mb-5 text-center">
+
+            <h2 class="mx-auto mb-3">Choose rooms:</h2>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="row">
+
+                    {% for available_category in available %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card">
+                                <img src="{{ available_category.category.picture.url }}" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ available_category.category }}</h5>
+                                    <p class="card-text">
+                                        {% with ''|center:available_category.category.persons as range %}
+                                            {% for _ in range %}
+                                                <i class="bi bi-person-fill text-secondary"></i>
+                                            {% endfor %}
+                                        {% endwith %}
+                                    </p>
+                                    <h6 class="card-subtitle mb-2 text-muted">${{ available_category.category.price }}
+                                        per night</h6>
+                                    <div class="form-group">
+                                        <label for="quantity{{ available_category.category.id }}">Quantity:</label>
+                                        <select name="quantity{{ available_category.category.id }}"
+                                                id="quantity{{ available_category.category.id }}"
+                                                class="form-control text-center mx-auto w-25">
+                                            {% for option in available_category.options %}
+                                                <option value="{{ option }}">{{ option }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                </div>
+
+                <button type="submit" class="btn btn-primary" name="booking_button">Book Rooms</button>
+
+            </form>
+        </div>
+
+    {% endif %}
+
+{% endblock content %}
