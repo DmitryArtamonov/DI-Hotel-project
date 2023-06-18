@@ -4,7 +4,12 @@ from django.utils import timezone
 
 
 class User(AbstractUser):
-    pass
+
+    # This fields save the data of the current booking to save it later and to use
+    # as default in the form (not reset the form if user close it)
+    current_booking_persons = models.IntegerField(default=2)
+    current_booking_in = models.DateField(null=True, blank=True)
+    current_booking_out = models.DateField(null=True, blank=True)
 
 
 class RoomCategory(models.Model):
@@ -30,7 +35,7 @@ class Visitor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.first_name+' '+self.user.last_name
+        return self.user.username
 
 
 class Booking(models.Model):
@@ -38,11 +43,11 @@ class Booking(models.Model):
     visitor = models.ForeignKey(Visitor, on_delete=models.CASCADE)
     check_in = models.DateField()
     check_out = models.DateField()
-    cost = models.IntegerField()
+    cost = models.IntegerField(null=True)
     rooms = models.ManyToManyField(Room)
 
-    def __str__(self):
-        return self.id
+    # def __str__(self):
+    #     return self.id
 
 
 
