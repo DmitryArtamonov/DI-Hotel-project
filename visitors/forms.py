@@ -4,7 +4,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.utils import timezone
 
-from visitors.models import User
+from visitors.models import User, Booking
 
 
 class SignupForm(UserCreationForm):
@@ -64,5 +64,11 @@ class bookingForm(forms.Form):
         return check_out
 
 
+class BookingUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['tel', 'comments']
 
-
+        widgets = {
+            'comments': forms.Textarea(attrs={'rows': 6, 'cols': 26}),
+        }

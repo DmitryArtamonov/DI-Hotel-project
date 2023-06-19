@@ -45,6 +45,8 @@ class Booking(models.Model):
     check_out = models.DateField()
     cost = models.IntegerField(null=True)
     rooms = models.ManyToManyField(Room)
+    tel = models.CharField(max_length=20, null=True)
+    comments = models.TextField(null=True, blank=True)
 
     # def __str__(self):
     #     return self.id

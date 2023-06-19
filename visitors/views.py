@@ -1,14 +1,12 @@
 from datetime import timedelta
 
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
 
 from .models import RoomCategory, Room, Booking, User, Visitor
-from .forms import bookingForm, SignupForm
-
-
+from .forms import bookingForm, SignupForm, BookingUpdateForm
 
 
 def homepage(request):
@@ -41,10 +39,6 @@ def booking(request):
                 cur_user.current_booking_out = check_out
                 cur_user.save()
 
-                # Saving request data. It should be attached to 'booking' button.
-                # To get it with booking post request.
-                # booking_request = (check_in.isoformat(), check_out.isoformat(), persons)
-
                 # finding available rooms
                 for category in RoomCategory.objects.all():
                     rooms = Room.objects.filter(category=category)
@@ -71,10 +65,8 @@ def booking(request):
                     error = 'Sorry, there are no free rooms for your request'
 
 
-
         # booking form handling
         elif 'booking_button' in request.POST:
-            # booking_data = request.POST['booking_button']
             categories = RoomCategory.objects.all()
             user = request.user
             persons = user.current_booking_persons
@@ -95,8 +87,6 @@ def booking(request):
 
             # create booking
             else:
-                booking_data = []
-                nights = (check_out - check_in).days
                 booking = Booking(
                     visitor=Visitor.objects.get(user=user),
                     check_in=check_in,
@@ -122,14 +112,7 @@ def booking(request):
                 print('new booking:', booking.__dict__)
                 booking.save()
 
-
-                        # booking_data.append({'category': category,
-                        #                      'rooms': quantity,
-                        #                      'price': category.price * nights * quantity})
-
-                return redirect('booking_approve')
-
-
+                return redirect('booking_info_url', pk=booking.id)
 
     context = {
         'form': form,
@@ -137,14 +120,39 @@ def booking(request):
         'booking_request': booking_request,
         'error': error
     }
-    print ('request', request)
-    print('context', context)
     return render(request, 'booking.html', context)
 
-def booking_approve(request, **kwargs):
-    print (request)
-    print(kwargs)
+def booking_info(request, pk):
+    booking = get_object_or_404(Booking, pk=pk)
+    nights = (booking.check_out - booking.check_in).days
+    booking_cost = 0
+    room_data = []
+    for room in booking.rooms.all():
+        category = room.category
+        room_data.append((room.number,
+                     category.title,
+                     category.price * nights))
+        booking_cost += category.price * nights
 
+    context = {'check_in': booking.check_in,
+               'check_out': booking.check_out,
+               'nights': nights,
+               'booking_cost': booking_cost,
+               'room_data': room_data,
+               'id': booking.id
+               }
+
+    if request.method == 'POST':
+        form = BookingUpdateForm(request.POST, instance=booking)
+        if form.is_valid():
+            form.save()
+            return redirect('booking_info_url', pk=booking.id)
+    else:
+        form = BookingUpdateForm(instance=booking)
+
+    context.update({'form': form, 'booking': booking})
+
+    return render(request, 'booking_info.html', context)
 
 
 class SignupView(CreateView):
@@ -158,8 +166,4 @@ class SignupView(CreateView):
         Visitor.objects.create(user=self.object)
 
         return response
-
-
-
-
 
